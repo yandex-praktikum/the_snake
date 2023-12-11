@@ -6,7 +6,7 @@ import the_snake
 
 EXPECTED_GAME_OBJECT_ATTRS = (
     ('атрибут', 'position'),
-    ('атрибут', 'color'),
+    ('атрибут', 'body_color'),
     ('метод', 'draw'),
 )
 
@@ -25,9 +25,9 @@ def test_game_object_attributes(game_object, attr_type, attr_name):
 
 EXPECTED_APPLE_ATTRS = (
     ('атрибут', 'position'),
-    ('атрибут', 'color'),
+    ('атрибут', 'body_color'),
     ('метод', 'draw'),
-    ('метод', '_randomize_position'),
+    ('метод', 'randomize_position'),
 )
 
 
@@ -51,22 +51,20 @@ def test_apple_attributes(apple, attr_type, attr_name):
 
 EXPECTED_SNAKE_ATTRS = (
     ('атрибут', 'position'),
-    ('атрибут', 'color'),
+    ('атрибут', 'body_color'),
     ('атрибут', 'length'),
     ('атрибут', 'positions'),
     ('атрибут', 'direction'),
-    ('атрибут', 'next_direction'),
     ('метод', 'draw'),
     ('метод', 'get_head_position'),
     ('метод', 'move'),
-    ('метод', '_reset'),
-    ('метод', 'handle_keys'),
+    ('метод', 'reset'),
     ('метод', 'update_direction'),
 )
 
 
 def test_snake_inherits_from_game_object():
-    assert issubclass(the_snake.snake_, the_snake.GameObject), (
+    assert issubclass(the_snake.Snake, the_snake.GameObject), (
         'Класс `Snake` должен наследоваться от класса `GameObject`.'
     )
 
@@ -89,13 +87,15 @@ EXPECTED_MODULE_ELEMENTS = (
     ('константа', 'GRID_SIZE'),
     ('константа', 'GRID_WIDTH'),
     ('константа', 'GRID_HEIGHT'),
-    ('константа', 'BACKGROUND_COLOR'),
+    ('константа', 'BOARD_BACKGROUND_COLOR'),
     ('константа', 'UP'),
     ('константа', 'DOWN'),
     ('константа', 'LEFT'),
     ('константа', 'RIGHT'),
     ('переменная', 'screen'),
     ('переменная', 'clock'),
+    ('функция', 'main'),
+    ('функция', 'handle_keys'),
 )
 
 
@@ -125,7 +125,11 @@ def test_vars_type(expected_type, var_name):
     )
 
 
-def test_main_exists():
-    assert hasattr(the_snake, 'main'), (
-        'Убедитесь, что в модуле `the_snake` есть функция `main`.'
+@pytest.mark.parametrize(
+    'func_name',
+    ('handle_keys', 'main'),
+)
+def test_vars_are_functions(func_name):
+    assert callable(getattr(the_snake, func_name, None)), (
+        f'Убедитесь, что переменная `{func_name}` является функцией.'
     )

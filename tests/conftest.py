@@ -61,7 +61,7 @@ def game_object():
 
 @pytest.fixture
 def snake():
-    return the_snake.snake_()
+    return the_snake.Snake()
 
 
 @pytest.fixture

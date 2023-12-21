@@ -41,11 +41,11 @@ def main():
     # Тут нужно создать экземпляры классов
     ...
 
-    while True:
-        clock.tick(SPEED)
+    # while True:
+        # clock.tick(SPEED)
 
         # Тут опишите основную логику игры
-        ...
+        # ...
 
 
 if __name__ == '__main__':

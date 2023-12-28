@@ -131,5 +131,5 @@ def test_vars_type(expected_type, var_name):
 )
 def test_vars_are_functions(func_name):
     assert callable(getattr(the_snake, func_name, None)), (
-        f'Убедитесь, что переменная `{func_name}` является функцией.'
+        f'Убедитесь, что переменная `{func_name}` - это функция.'
     )

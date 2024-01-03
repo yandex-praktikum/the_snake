@@ -17,8 +17,17 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвета фона - черный:
+# Цвет фона - черный:
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
+
+# Цвет границы ячейки
+BORDER_COLOR = (93, 216, 228)
+
+# Цвет яблока
+APPLE_COLOR = (255, 0, 0)
+
+# Цвет змейки
+SNAKE_COLOR = (0, 255, 0)
 
 # Скорость движения змейки:
 SPEED = 20
@@ -42,7 +51,7 @@ def main():
     ...
 
     # while True:
-        # clock.tick(SPEED)
+    #     clock.tick(SPEED)
 
         # Тут опишите основную логику игры.
         # ...
@@ -59,7 +68,7 @@ if __name__ == '__main__':
 #         (GRID_SIZE, GRID_SIZE)
 #     )
 #     pygame.draw.rect(surface, self.body_color, rect)
-#     pygame.draw.rect(surface, (93, 216, 228), rect, 1)
+#     pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
 # # Метод draw класса Snake
 # def draw(self, surface):
@@ -68,13 +77,12 @@ if __name__ == '__main__':
 #             pygame.Rect((position[0], position[1]), (GRID_SIZE, GRID_SIZE))
 #         )
 #         pygame.draw.rect(surface, self.body_color, rect)
-#         pygame.draw.rect(surface, (93, 216, 228), rect, 1)
+#         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
 #     # Отрисовка головы змейки
-#     head = self.positions[0]
-#     head_rect = pygame.Rect((head[0], head[1]), (GRID_SIZE, GRID_SIZE))
+#     head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
 #     pygame.draw.rect(surface, self.body_color, head_rect)
-#     pygame.draw.rect(surface, (93, 216, 228), head_rect, 1)
+#     pygame.draw.rect(surface, BORDER_COLOR, head_rect, 1)
 
 #     # Затирание последнего сегмента
 #     if self.last:
@@ -89,6 +97,7 @@ if __name__ == '__main__':
 #     for event in pygame.event.get():
 #         if event.type == pygame.QUIT:
 #             pygame.quit()
+#             raise SystemExit
 #         elif event.type == pygame.KEYDOWN:
 #             if event.key == pygame.K_UP and game_object.direction != DOWN:
 #                 game_object.next_direction = UP

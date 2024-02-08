@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 import sys
 from pathlib import Path
@@ -13,6 +14,30 @@ sys.path.append(str(BASE_DIR))
 # Hide the pygame screen
 os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
+TIMEOUT_ASSERT_MSG = (
+    'Проект работает некорректно, проверка прервана.\n'
+    'Вероятные причины ошибки:\n'
+    '1. Исполняемый код (например, вызов функции `main()`) оказался в '
+    'глобальной зоне видимости. Как исправить: вызов функции `main` поместите '
+    'внутрь конструкции `if __name__ == "__main__":`.\n'
+    '2. В цикле `while True` внутри функции `main` отсутствует вызов метода '
+    '`tick` объекта `clock`. Не изменяйте прекод в этой части.'
+)
+
+
+def import_the_snake():
+    import the_snake  # noqa
+
+
+process = multiprocessing.Process(target=import_the_snake)
+process.start()
+process.join(timeout=1)
+is_finished = process.is_alive()
+if is_finished:
+    process.terminate()
+assert not is_finished, TIMEOUT_ASSERT_MSG
+
+
 try:
     import the_snake
 except ImportError as error:
@@ -25,17 +50,6 @@ for class_name in ('GameObject', 'Snake', 'Apple'):
     assert hasattr(the_snake, class_name), (
         f'Убедитесь, что в модуле `the_snake` определен класс `{class_name}`.'
     )
-
-
-TIMEOUT_ASSERT_MSG = (
-    'Проект работает некорректно, проверка прервана.\n'
-    'Вероятные причины ошибки:\n'
-    '1. Исполняемый код (например, вызов функции `main()`) оказался в '
-    'глобальной зоне видимости. Как исправить: вызов функции `main` поместите '
-    'внутрь конструкции `if __name__ == "__main__":`.\n'
-    '2. В цикле `while True` внутри функции `main` отсутствует вызов метода '
-    '`tick` объекта `clock`. Не изменяйте прекод в этой части.'
-)
 
 
 def write_timeout_reasons(text, stream=None):

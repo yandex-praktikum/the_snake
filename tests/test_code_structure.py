@@ -1,8 +1,6 @@
 import pygame
 import pytest
 
-import the_snake
-
 
 EXPECTED_GAME_OBJECT_ATTRS = (
     ('атрибут', 'position'),
@@ -31,8 +29,8 @@ EXPECTED_APPLE_ATTRS = (
 )
 
 
-def test_apple_inherits_from_game_object():
-    assert issubclass(the_snake.Apple, the_snake.GameObject), (
+def test_apple_inherits_from_game_object(_the_snake):
+    assert issubclass(_the_snake.Apple, _the_snake.GameObject), (
         'Класс `Apple` должен наследоваться от класса `GameObject`.'
     )
 
@@ -63,8 +61,8 @@ EXPECTED_SNAKE_ATTRS = (
 )
 
 
-def test_snake_inherits_from_game_object():
-    assert issubclass(the_snake.Snake, the_snake.GameObject), (
+def test_snake_inherits_from_game_object(_the_snake):
+    assert issubclass(_the_snake.Snake, _the_snake.GameObject), (
         'Класс `Snake` должен наследоваться от класса `GameObject`.'
     )
 
@@ -104,8 +102,8 @@ EXPECTED_MODULE_ELEMENTS = (
     EXPECTED_MODULE_ELEMENTS,
     ids=[elem[1] for elem in EXPECTED_MODULE_ELEMENTS]
 )
-def test_elements_exist(element_type, element_name):
-    assert hasattr(the_snake, element_name), (
+def test_elements_exist(element_type, element_name, _the_snake):
+    assert hasattr(_the_snake, element_name), (
         f'Убедитесь, что в модуле `the_snake` определена {element_type} '
         f'`{element_name}`.'
     )
@@ -118,8 +116,8 @@ def test_elements_exist(element_type, element_name):
         (pygame.time.Clock, 'clock'),
     ),
 )
-def test_vars_type(expected_type, var_name):
-    assert isinstance(getattr(the_snake, var_name, None), expected_type), (
+def test_vars_type(expected_type, var_name, _the_snake):
+    assert isinstance(getattr(_the_snake, var_name, None), expected_type), (
         'Убедитесь, что в модуле `the_snake` есть переменная '
         f'`{var_name}` типа `{expected_type.__name__}`.'
     )
@@ -129,7 +127,7 @@ def test_vars_type(expected_type, var_name):
     'func_name',
     ('handle_keys', 'main'),
 )
-def test_vars_are_functions(func_name):
-    assert callable(getattr(the_snake, func_name, None)), (
+def test_vars_are_functions(func_name, _the_snake):
+    assert callable(getattr(_the_snake, func_name, None)), (
         f'Убедитесь, что переменная `{func_name}` - это функция.'
     )

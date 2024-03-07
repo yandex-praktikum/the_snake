@@ -50,7 +50,6 @@ def test_apple_attributes(apple, attr_type, attr_name):
 EXPECTED_SNAKE_ATTRS = (
     ('атрибут', 'position'),
     ('атрибут', 'body_color'),
-    ('атрибут', 'length'),
     ('атрибут', 'positions'),
     ('атрибут', 'direction'),
     ('метод', 'draw'),

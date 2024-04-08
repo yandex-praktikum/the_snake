@@ -2,9 +2,6 @@ from random import choice, randint
 
 import pygame
 
-# Инициализация PyGame:
-pygame.init()
-
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
@@ -47,6 +44,8 @@ clock = pygame.time.Clock()
 
 
 def main():
+    # Инициализация PyGame:
+    pygame.init()
     # Тут нужно создать экземпляры классов.
     ...
 

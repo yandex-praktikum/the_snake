@@ -193,3 +193,5 @@ if name == 'main':
 
 if name == 'main':
     main()
+git add 
+git push

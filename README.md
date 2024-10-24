@@ -1,9 +1,8 @@
 # the_snake
-python -m venv venv
-source venv/Scripts/activate
 from random import randint
 import pygame
 from typing import Optional, Tuple, List
+
 # Инициализация PyGame:
 pygame.init()
 
@@ -182,6 +181,12 @@ def main() -> None:
         screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw(screen)
         apple.draw(screen)
+
+        pygame.display.update()
+
+
+if name == 'main':
+    main()
 
         pygame.display.update()
 

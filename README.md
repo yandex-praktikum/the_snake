@@ -1,9 +1,9 @@
 # the_snake
+python -m venv venv
+source venv/Scripts/activate
 from random import randint
 import pygame
 from typing import Optional, Tuple, List
-python -m venv venv
-source venv/Scripts/activate
 # Инициализация PyGame:
 pygame.init()
 

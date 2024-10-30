@@ -1,0 +1,145 @@
+import random
+import time
+import os
+
+# Константы для размеров
+SCREEN_WIDTH, SCREEN_HEIGHT = 20, 10
+GRID_SIZE = 1
+GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
+GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+
+# Направления движения
+UP = (0, -1)
+DOWN = (0, 1)
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+
+# Скорость движения змейки
+SPEED = 0.5  # Секунды
+
+class GameObject:
+    """Базовый класс для игровых объектов."""
+
+    def __init__(self):
+        self.position = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.body_color = None
+
+    def draw(self, screen):
+        raise NotImplementedError(f'Определите draw в {self.__class__.__name__}.')
+
+class Apple(GameObject):
+    """Класс, описывающий яблоко и действия с ним."""
+
+    def __init__(self):
+        super().__init__()
+        self.position = self.randomize_position()
+
+    @staticmethod
+    def randomize_position():
+        return (
+            random.randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        )
+
+    def draw(self, screen):
+        screen[self.position[1]][self.position[0]] = 'A'
+
+class Snake(GameObject):
+    """Класс, описывающий змейку и действия с ней."""
+
+    def __init__(self):
+        super().__init__()
+        self.reset()
+
+    def update_direction(self, next_direction):
+        if next_direction:
+            self.direction = next_direction
+
+    def move(self):
+        head_position = self.get_head_position()
+        x_point, y_point = head_position
+
+        if x_point >= SCREEN_WIDTH:
+            x_point = 0
+        elif x_point < 0:
+            x_point = SCREEN_WIDTH - 1
+
+        if y_point >= SCREEN_HEIGHT:
+            y_point = 0
+        elif y_point < 0:
+            y_point = SCREEN_HEIGHT - 1
+
+        if self.direction == RIGHT:
+            self.positions.insert(0, (x_point + GRID_SIZE, y_point))
+        elif self.direction == LEFT:
+            self.positions.insert(0, (x_point - GRID_SIZE, y_point))
+        elif self.direction == UP:
+            self.positions.insert(0, (x_point, y_point - GRID_SIZE))
+        elif self.direction == DOWN:
+            self.positions.insert(0, (x_point, y_point + GRID_SIZE))
+        self.last = self.positions.pop()
+
+    def draw(self, screen):
+        for position in self.positions[:-1]:
+            screen[position[1]][position[0]] = 'o'
+
+        head = self.get_head_position()
+        screen[head[1]][head[0]] = 'O'
+
+        if self.last:
+            screen[self.last[1]][self.last[0]] = ' '
+
+    def get_head_position(self):
+        return self.positions[0]
+
+    def reset(self):
+        self.length = 1
+        self.positions = [(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)]
+        self.direction = RIGHT
+        self.next_direction = None
+        self.last = None
+
+    def snake_position(self):
+        return self.positions[1:]
+
+def handle_keys(snake):
+    key = input("Enter direction (w/a/s/d): ")
+    if key == 'w' and snake.direction != DOWN:
+        snake.next_direction = UP
+    elif key == 's' and snake.direction != UP:
+        snake.next_direction = DOWN
+    elif key == 'a' and snake.direction != RIGHT:
+        snake.next_direction = LEFT
+    elif key == 'd' and snake.direction != LEFT:
+        snake.next_direction = RIGHT
+
+def clear_screen():
+    print("\n" * 100)  # Простой способ очистки экрана
+
+def main():
+    screen = [[' ' for _ in range(SCREEN_WIDTH)] for _ in range(SCREEN_HEIGHT)]
+
+    apple = Apple()
+    snake = Snake()
+
+    while True:
+        clear_screen()
+        handle_keys(snake)
+        snake.update_direction(snake.next_direction)
+        apple.draw(screen)
+        snake.draw(screen)
+        snake.move()
+
+        if snake.get_head_position() == apple.position:
+            snake.positions.append(snake.last)
+            apple = Apple()
+        elif snake.get_head_position() in snake.snake_position():
+            snake.reset()
+
+        for row in screen:
+            print(''.join(row))
+
+        time.sleep(SPEED)
+
+if __name__ == '__main__':
+    main()

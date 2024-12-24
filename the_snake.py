@@ -1,6 +1,6 @@
 from random import choice, randint
 
-import pygame
+import pygam
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480

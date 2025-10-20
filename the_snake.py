@@ -79,6 +79,7 @@ class Snake(GameObject):
         self.last = None
 
     def get_head_position(self):
+        """Сбрасывает змейку в начальное состояние."""
         return self.positions[0]
 
     def update_direction(self):

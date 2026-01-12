@@ -1,7 +1,8 @@
-"""Мини-игра «Змейка» на pygame.
+"""Мини-игра "Змейка" на pygame.
 
-Модуль содержит простую реализацию игры "Змейка" с объектами `Snake` и
-`Apple` и игровым циклом в `main()`.
+Файл: the_snake.py
+Требования: pygame
+Запуск: python the_snake.py
 """
 
 import random
@@ -31,11 +32,11 @@ DOWN: Tuple[int, int] = (0, CELL_SIZE)
 LEFT: Tuple[int, int] = (-CELL_SIZE, 0)
 RIGHT: Tuple[int, int] = (CELL_SIZE, 0)
 
-# Алиасы и объекты, ожидаемые тестами
+# Алиасы для тестов
 GRID_SIZE = CELL_SIZE
 BOARD_BACKGROUND_COLOR = COLOR_BG
 
-# Инициализация pygame-объектов на уровне модуля (тесты ожидают их наличие)
+# Инициализация pygame-объектов на уровне модуля
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -44,28 +45,25 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс игрового объекта."""
 
-    def __init__(self, position: Optional[Tuple[int, int]] = None):
-        """Инициализирует GameObject с заданной позицией.
-
-        Если позиция не указана, устанавливается в (0, 0).
-        """
+    def __init__(self, position: Optional[Tuple[int, int]] = None) -> None:
+        """Инициализирует объект с позицией."""
         if position is None:
             position = (0, 0)
         self.position = position
         self.body_color = None
 
     def draw(self, surface: pygame.Surface) -> None:
-        """Абстрактный метод отрисовки (переопределяется в наследниках)."""
+        """Отрисовка — переопределяется в наследниках."""
         pass
 
 
 class Apple(GameObject):
-    """Класс яблока, появляется в случайной свободной ячейке."""
+    """Яблоко, появляется в случайной свободной ячейке."""
 
     def __init__(
         self, forbidden_positions: Optional[List[Tuple[int, int]]] = None
     ) -> None:
-        """Инициализирует яблоко и задаёт начальную позицию."""
+        """Инициализирует яблоко и задаёт позицию."""
         center_x = (GRID_WIDTH // 2) * CELL_SIZE
         center_y = (GRID_HEIGHT // 2) * CELL_SIZE
         super().__init__((center_x, center_y))
@@ -75,10 +73,7 @@ class Apple(GameObject):
     def randomize_position(
         self, forbidden_positions: List[Tuple[int, int]]
     ) -> None:
-        """Устанавливает случайную позицию яблока.
-
-        Избегает позиций из `forbidden_positions`.
-        """
+        """Устанавливает случайную позицию, избегая forbidden_positions."""
         attempts = 0
         while True:
             x = random.randrange(0, GRID_WIDTH) * CELL_SIZE
@@ -88,7 +83,6 @@ class Apple(GameObject):
                 return
             attempts += 1
             if attempts > 1000:
-                # Если почти все клетки заняты — найдём любую свободную.
                 for gx in range(GRID_WIDTH):
                     for gy in range(GRID_HEIGHT):
                         maybe = (gx * CELL_SIZE, gy * CELL_SIZE)
@@ -97,7 +91,7 @@ class Apple(GameObject):
                             return
 
     def draw(self, surface: pygame.Surface) -> None:
-        """Отрисовать яблоко на поверхности."""
+        """Отрисовать яблоко."""
         rect = pygame.Rect(
             self.position[0], self.position[1], CELL_SIZE, CELL_SIZE
         )
@@ -119,16 +113,16 @@ class Snake(GameObject):
         self.next_direction: Optional[Tuple[int, int]] = None
 
     def get_head_position(self) -> Tuple[int, int]:
-        """Возвращает координаты головы змейки."""
+        """Возвращает координаты головы."""
         return self.positions[0]
 
     @staticmethod
     def _opposite(dir1: Tuple[int, int], dir2: Tuple[int, int]) -> bool:
-        """Проверяет, являются ли направления противоположными."""
+        """Проверяет, противоположны ли направления."""
         return dir1[0] == -dir2[0] and dir1[1] == -dir2[1]
 
     def update_direction(self) -> None:
-        """Применяет next_direction, если оно задано и не противоположно."""
+        """Применяет next_direction, если она задана и не обратна."""
         if self.next_direction is None:
             return
         if not self._opposite(self.next_direction, self.direction):
@@ -141,7 +135,6 @@ class Snake(GameObject):
         new_head_x = current_head[0] + self.direction[0]
         new_head_y = current_head[1] + self.direction[1]
 
-        # Обёртывание по краям (wrap-around)
         if new_head_x < 0:
             new_head_x = (GRID_WIDTH - 1) * CELL_SIZE
         elif new_head_x >= SCREEN_WIDTH:
@@ -189,10 +182,13 @@ def handle_key_event(event: pygame.event.Event, snake: Snake) -> None:
         snake.next_direction = RIGHT
 
 
+# Алиас для совместимости с тестами
+handle_keys = handle_key_event
+
+
 def main() -> None:
     """Основная функция: инициализация и игровой цикл."""
-    # Используем объекты `screen` и `clock`, созданные на уровне модуля
-    pygame.display.set_caption("Изгиб Питона — Змейка")
+    pygame.display.set_caption('Изгиб Питона — Змейка')
 
     snake = Snake()
     apple = Apple(forbidden_positions=snake.positions)
@@ -211,7 +207,6 @@ def main() -> None:
         snake.update_direction()
         removed_tail = snake.move()
 
-        # Поедание яблока
         if snake.get_head_position() == apple.position:
             snake.length += 1
             if removed_tail is not None:
@@ -219,13 +214,11 @@ def main() -> None:
                 removed_tail = None
             apple.randomize_position(snake.positions)
 
-        # Самопересечение
         head = snake.get_head_position()
         if head in snake.positions[1:]:
             snake.reset()
             apple.randomize_position(snake.positions)
 
-        # Отрисовка
         screen.fill(COLOR_BG)
         apple.draw(screen)
         snake.draw(screen)
@@ -236,9 +229,5 @@ def main() -> None:
     sys.exit()
 
 
-# Совместимость с ожидаемыми именами в тестах
-# `handle_keys` — алиас для `handle_key_event`.
-handle_keys = handle_key_event
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,9 +1,4 @@
-"""Мини-игра 'Змейка' на pygame.
-
-Файл: the_snake.py
-Требования: pygame
-Запуск: python the_snake.py
-"""
+"""Мини-игра «Змейка» на pygame."""
 
 import random
 import sys
@@ -91,7 +86,12 @@ class Apple(GameObject):
 
     def draw(self, surface: pygame.Surface) -> None:
         """Отрисовать яблоко."""
-        rect = pygame.Rect(self.position[0], self.position[1], CELL_SIZE, CELL_SIZE)
+        rect = pygame.Rect(
+            self.position[0],
+            self.position[1],
+            CELL_SIZE,
+            CELL_SIZE,
+        )
         pygame.draw.rect(surface, self.body_color, rect)
 
 

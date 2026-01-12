@@ -1,4 +1,4 @@
-"""Мини-игра «Змейка» на pygame."""
+"""Мини-игра 'Змейка' на pygame."""
 
 import random
 import sys
@@ -6,31 +6,26 @@ from typing import List, Optional, Tuple
 
 import pygame
 
-# Параметры игрового поля
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 CELL_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // CELL_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // CELL_SIZE
 
-# Цвета RGB
 COLOR_BG = (0, 0, 0)
 COLOR_SNAKE = (0, 255, 0)
 COLOR_APPLE = (255, 0, 0)
 
 FPS = 20
 
-# Направления (dx, dy)
 UP: Tuple[int, int] = (0, -CELL_SIZE)
 DOWN: Tuple[int, int] = (0, CELL_SIZE)
 LEFT: Tuple[int, int] = (-CELL_SIZE, 0)
 RIGHT: Tuple[int, int] = (CELL_SIZE, 0)
 
-# Алиасы для тестов
 GRID_SIZE = CELL_SIZE
 BOARD_BACKGROUND_COLOR = COLOR_BG
 
-# Инициализация pygame (объекты на уровне модуля)
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
@@ -47,7 +42,7 @@ class GameObject:
         self.body_color = None
 
     def draw(self, surface: pygame.Surface) -> None:
-        """Метод отрисовки (переопределяется в наследниках)."""
+        """Метод отрисовки — переопределяется в наследниках."""
         raise NotImplementedError
 
 
@@ -179,7 +174,6 @@ def handle_key_event(event: pygame.event.Event, snake: Snake) -> None:
         snake.next_direction = RIGHT
 
 
-# Алиас для совместимости
 handle_keys = handle_key_event
 
 

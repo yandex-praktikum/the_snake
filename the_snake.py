@@ -31,6 +31,15 @@ DOWN: Tuple[int, int] = (0, CELL_SIZE)
 LEFT: Tuple[int, int] = (-CELL_SIZE, 0)
 RIGHT: Tuple[int, int] = (CELL_SIZE, 0)
 
+# Алиасы и объекты, ожидаемые тестами
+GRID_SIZE = CELL_SIZE
+BOARD_BACKGROUND_COLOR = COLOR_BG
+
+# Инициализация pygame-объектов на уровне модуля (тесты ожидают их наличие)
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
 
 class GameObject:
     """Базовый класс игрового объекта."""
@@ -176,6 +185,10 @@ def handle_key_event(event: pygame.event.Event, snake: Snake) -> None:
     elif key == pygame.K_RIGHT or key == pygame.K_d:
         snake.next_direction = RIGHT
 
+# Совместимость с ожидаемыми именами в тестах
+# `handle_keys` — алиас для `handle_key_event`.
+handle_keys = handle_key_event
+
 
 def main() -> None:
     """Основная функция: инициализация и игровой цикл."""
@@ -226,15 +239,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-# Алиасы и объекты, ожидаемые тестами
-GRID_SIZE = CELL_SIZE
-BOARD_BACKGROUND_COLOR = COLOR_BG
-
-# Инициализация pygame-объектов на уровне модуля (тесты ожидают их наличие)
-pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-clock = pygame.time.Clock()
-
-# Совместимость с ожидаемыми именами в тестах
-handle_keys = handle_key_event
+ 

@@ -75,7 +75,10 @@ class Apple(GameObject):
     def randomize_position(
         self, forbidden_positions: List[Tuple[int, int]]
     ) -> None:
-        """Устанавливает случайную позицию яблока, избегая forbidden_positions."""
+        """Устанавливает случайную позицию яблока.
+
+        Избегает позиций из `forbidden_positions`.
+        """
         attempts = 0
         while True:
             x = random.randrange(0, GRID_WIDTH) * CELL_SIZE
@@ -185,10 +188,6 @@ def handle_key_event(event: pygame.event.Event, snake: Snake) -> None:
     elif key == pygame.K_RIGHT or key == pygame.K_d:
         snake.next_direction = RIGHT
 
-# Совместимость с ожидаемыми именами в тестах
-# `handle_keys` — алиас для `handle_key_event`.
-handle_keys = handle_key_event
-
 
 def main() -> None:
     """Основная функция: инициализация и игровой цикл."""
@@ -237,6 +236,9 @@ def main() -> None:
     sys.exit()
 
 
+# Совместимость с ожидаемыми именами в тестах
+# `handle_keys` — алиас для `handle_key_event`.
+handle_keys = handle_key_event
+
 if __name__ == "__main__":
     main()
- 

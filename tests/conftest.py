@@ -15,22 +15,25 @@ sys.path.append(str(BASE_DIR))
 os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
 TIMEOUT_ASSERT_MSG = (
-    'Проект работает некорректно, проверка прервана.\n'
-    'Вероятные причины ошибки:\n'
-    '1. Исполняемый код (например, вызов функции `main()`) оказался в '
-    'глобальной зоне видимости. Как исправить: вызов функции `main` поместите '
-    'внутрь конструкции `if __name__ == "__main__":`.\n'
-    '2. В цикле `while True` внутри функции `main` отсутствует вызов метода '
-    '`tick` объекта `clock`. Не изменяйте прекод в этой части.'
+    "Проект работает некорректно, проверка прервана.\n"
+    "Вероятные причины ошибки:\n"
+    "1. Исполняемый код (например, вызов функции `main()`) оказался в "
+    "глобальной зоне видимости. "
+    "Как исправить: поместите вызов функции `main` внутрь конструкции "
+    "`if __name__ == \"__main__\":`.\n"
+    "2. В цикле `while True` внутри функции `main` отсутствует вызов метода "
+    "`tick` объекта `clock`. Не изменяйте прекод в этой части."
 )
 
 
 def import_the_snake():
-    import the_snake  # noqa
+    """Импортирует модуль `the_snake` в отдельном процессе."""
+    import the_snake  # noqa: F401
 
 
 @pytest.fixture(scope='session')
 def snake_import_test():
+    """Проверяет, что импорт модуля `the_snake` не зависает."""
     check_import_process = Process(target=import_the_snake)
     check_import_process.start()
     pid = check_import_process.pid
@@ -42,16 +45,19 @@ def snake_import_test():
 
 @pytest.fixture(scope='session')
 def _the_snake(snake_import_test):
+    """Импортирует `the_snake` и проверяет наличие обязательных классов."""
     try:
         import the_snake
     except ImportError as error:
         raise AssertionError(
             'При импорте модуль `the_snake` произошла ошибка:\n'
-            f'{type(error).__name__}: {error}'
+            f'{type(error).__name__}: '
+            f'{error}'
         )
     for class_name in ('GameObject', 'Snake', 'Apple'):
         assert hasattr(the_snake, class_name), (
-            f'Убедитесь, что в модуле `the_snake` определен класс `{class_name}`.'
+            'Убедитесь, что в модуле `the_snake` определен класс '
+            f'`{class_name}`.'
         )
     return the_snake
 
@@ -73,6 +79,10 @@ pytest_timeout.write = write_timeout_reasons
 
 
 def _create_game_object(class_name, module):
+    """Попытка создать объект указанного класса без аргументов.
+
+    Если конструктор требует аргументы, выбрасывает понятное AssertionError.
+    """
     try:
         return getattr(module, class_name)()
     except TypeError as error:
@@ -88,24 +98,30 @@ def _create_game_object(class_name, module):
 
 @pytest.fixture
 def game_object(_the_snake):
+    """Фикстура: объект `GameObject` из тестируемого модуля."""
     return _create_game_object('GameObject', _the_snake)
 
 
 @pytest.fixture
 def snake(_the_snake):
+    """Фикстура: объект `Snake` из тестируемого модуля."""
     return _create_game_object('Snake', _the_snake)
 
 
 @pytest.fixture
 def apple(_the_snake):
+    """Фикстура: объект `Apple` из тестируемого модуля."""
     return _create_game_object('Apple', _the_snake)
 
 
 class StopInfiniteLoop(Exception):
+    """Исключение для прерывания тестовых циклов при имитации таймаута."""
+
     pass
 
 
 def loop_breaker_decorator(func):
+    """Декоратор, который прерывает многократные вызовы функции."""
     call_counter = 0
 
     def wrapper(*args, **kwargs):
@@ -120,6 +136,7 @@ def loop_breaker_decorator(func):
 
 @pytest.fixture
 def modified_clock(_the_snake):
+    """Фикстура: заменяет `clock` в тестируемом модуле на модифицированный."""
     class _Clock:
         def __init__(self, clock_obj: Clock) -> None:
             self.clock = clock_obj
